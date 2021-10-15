@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
     @Autowired private UserRepository userRepository;
     @Autowired private DialogRepository dialogRepository;
     @Autowired private DialogService dialogService;
-    @Autowired private ConverterDto converterDto;
+    private final ConverterDto converterDto = new ConverterDto();
     @Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private static Logger log = Logger.getLogger(UserService.class.getName());

@@ -7,6 +7,8 @@ import com.bc.archive_users.security.RefreshTokenService;
 import com.bc.archive_users.user.User;
 import com.bc.archive_users.user.UserDto;
 import com.bc.archive_users.user.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,16 +51,19 @@ public class UserController {
         return new TokenRefreshResponse(token, requestRefreshToken);
     }
 
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/findAll")
     public List<UserDto> findAllUsers() {
         return userService.findAll();
     }
 
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @PostMapping("/addNewFriend")
     public String addNewFriend(@RequestParam Long friend_id) {
         return userService.addNewFriend(friend_id);
     }
 
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/findAllFriends")
     public List<UserDto> findAllFriends() {
         return userService.findAllFriends();

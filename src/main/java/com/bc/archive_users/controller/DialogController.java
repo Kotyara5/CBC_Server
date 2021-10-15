@@ -5,6 +5,7 @@ import com.bc.archive_users.dialog.DialogService;
 import com.bc.archive_users.dialog.message.Message;
 import com.bc.archive_users.dialog.message.MessageDto;
 import com.bc.archive_users.tools.ConverterDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/dialogs")
 @CrossOrigin
+@SecurityRequirement(name = "bearerAuth")
 public class DialogController {
     @Autowired private DialogService dialogService;
     @Autowired private ConverterDto converterDto;

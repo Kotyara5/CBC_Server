@@ -21,9 +21,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Integer usersIsFriends(Long user_id, Long friend_id);
 
     //Получаем всех друзей определённого пользователя
-    @Query(value = "SELECT * FROM users WHERE id IN " +
-            "(SELECT friend_id FROM friends WHERE user_id = ?1 " +
-            "UNION SELECT user_id FROM friends WHERE friend_id = ?1 )", nativeQuery = true)
+    @Query(value = "SELECT users.* FROM friends " +
+            "JOIN users ON users.id = friends.friend_id " +
+            "WHERE friends.user_id = ?1 " +
+            "UNION " +
+            "SELECT users.* FROM friends " +
+            "JOIN users ON users.id = friends.user_id " +
+            "WHERE friends.friend_id = ?1"
+            , nativeQuery = true)
     List<User> findAllFriends(Long id);
 
     @Query("UPDATE User a SET a.enabled = TRUE WHERE a.login = ?1") //Найти пользователя по логину и установить enabled = TRUE
