@@ -14,8 +14,9 @@ public interface DialogRepository extends JpaRepository<Dialog, Long> {
     @Query(value = "INSERT INTO usersdialogs VALUES (?1, ?2)", nativeQuery = true)
     void addNewUsersDialog(Long user_id, Long dialog_id);
 
-    @Query(value = "SELECT * FROM dialogs WHERE id IN " +
-            "(SELECT dialogs_id FROM usersdialogs WHERE user_id = ?1)", nativeQuery = true)
+    @Query(value = "SELECT dialogs.* FROM usersdialogs " +
+            "JOIN dialogs ON dialogs.id = usersdialogs.dialogs_id " +
+            "WHERE usersdialogs.user_id = ?1", nativeQuery = true)
     List<Dialog> findAllDialogs(Long id);
 
     //Проверка, участвует ли пользователь в диалоге (если да, вернёт Integer, если нет, то null)
@@ -23,7 +24,8 @@ public interface DialogRepository extends JpaRepository<Dialog, Long> {
     Integer userIsInTheDialog(Long user_id, Long dialog_id);
 
     //Выбрать имя собеседника (Находятся два участника диалога и берётся имя того, чей ид не совпадает с авторизированным пользователем)
-    @Query(value = "SELECT name FROM users WHERE id IN " +
-            "(SELECT user_id FROM usersdialogs WHERE dialogs_id = ?2 AND NOT user_id = ?1)", nativeQuery = true)
+    @Query(value = "SELECT users.name FROM usersdialogs " +
+            "JOIN users ON users.id = usersdialogs.user_id " +
+            "WHERE usersdialogs.dialogs_id = ?2 AND NOT usersdialogs.user_id = ?1", nativeQuery = true)
     String getNameOfFriendsForDialogs(Long user_id, Long dialog_id);
 }

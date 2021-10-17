@@ -7,11 +7,13 @@ public class AuthResponse {
     private String refreshToken;
     private String tokenType = "Bearer";
     private UserDto userDto;
+    private String successInfo;
 
-    public AuthResponse(String accessToken, String refreshToken, UserDto userDto) {
+    public AuthResponse(String accessToken, String refreshToken, UserDto userDto, String successInfo) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.userDto = userDto;
+        this.successInfo = successInfo;
     }
 
     public String getAccessToken() {
@@ -44,5 +46,13 @@ public class AuthResponse {
 
     public void setUserDto(UserDto userDto) {
         this.userDto = userDto;
+    }
+
+    public String getSuccessInfo() {
+        return successInfo;
+    }
+
+    public void setSuccessInfo(String successInfo) {
+        this.successInfo = successInfo;
     }
 }

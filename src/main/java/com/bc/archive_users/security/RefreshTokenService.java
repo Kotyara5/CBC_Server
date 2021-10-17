@@ -1,8 +1,10 @@
 package com.bc.archive_users.security;
 
 import com.bc.archive_users.tools.ConverterDto;
+import com.bc.archive_users.user.User;
 import com.bc.archive_users.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -36,5 +38,11 @@ public class RefreshTokenService {
             throw new RuntimeException(token.getToken() + "Refresh token was expired. Please make a new signin request");
         }
         return token;
+    }
+
+    public void deleteAllRefreshToken(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long user_id = user.getId();
+        refreshTokenRepository.deleteAllRefreshToken(user_id);
     }
 }

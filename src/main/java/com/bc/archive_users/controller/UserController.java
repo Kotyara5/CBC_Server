@@ -33,13 +33,25 @@ public class UserController {
 
     @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest request) {
-        log.info("auth: " + request.getLogin());
+        String info = "success: true";
+        AuthResponse authResponse;
         UserDto userDto = userService.findByLoginAndPassword(request.getLogin(), request.getPassword());
-        String token = jwtProvider.generateToken(userDto.getLogin());
+        if (userDto != null) {
+            String token = jwtProvider.generateToken(userDto.getLogin());
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDto);
+            authResponse =  new AuthResponse(token, refreshToken.getToken(), userDto, info);
+        } else {
+            info = "success: false. errors: login not found or incorrect password";
+            authResponse =  new AuthResponse(null, null, null, info);
+        }
+        log.info("auth: " + request.getLogin() + " " + info);
+        return authResponse;
+    }
 
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDto);
-
-        return new AuthResponse(token, refreshToken.getToken(), userDto);
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
+    @DeleteMapping("/logout")
+    public void logout() {
+        refreshTokenService.deleteAllRefreshToken();
     }
 
     @PostMapping("/refreshtoken")
